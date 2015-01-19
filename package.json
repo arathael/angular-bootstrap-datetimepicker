@@ -37,8 +37,7 @@
     "grunt-cli": "0.1.13"
   },
   "scripts": {
-    "test": "grunt --verbose",
-    "postinstall": "./node_modules/bower/bin/bower install"
+    "test": "grunt --verbose"
   },
   "repository": {
     "type": "git",
