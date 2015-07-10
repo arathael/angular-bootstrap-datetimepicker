@@ -2,7 +2,7 @@
 
 /**
  * @license angular-bootstrap-datetimepicker
- * (c) 2013-2014 Knight Rider Consulting, Inc. http://www.knightrider.com
+ * Copyright 2013 Knight Rider Consulting, Inc. http://www.knightrider.com
  * License: MIT
  */
 
@@ -13,7 +13,8 @@
  */
 describe('beforeRender', function () {
   'use strict';
-  var $rootScope, $compile;
+  var $rootScope;
+  var $compile;
   beforeEach(module('ui.bootstrap.datetimepicker'));
   beforeEach(inject(function (_$compile_, _$rootScope_) {
     moment.locale('en');
@@ -79,10 +80,14 @@ describe('beforeRender', function () {
 
       $rootScope.date = moment('2014-01-01T00:00:00.000').toDate();
 
+      var offset = new Date().getTimezoneOffset() * 60000;
+
       $rootScope.beforeRender = function (dates) {
         expect(dates.length).toBe(42);
-        expect(dates[0].dateValue).toBe(1388275200000);
-        expect(dates[11].dateValue).toBe(1389225600000);
+        expect(dates[0].utcDateValue).toBe(1388275200000);
+        expect(dates[0].localDateValue()).toBe(1388275200000 + offset);
+        expect(dates[11].utcDateValue).toBe(1389225600000);
+        expect(dates[11].localDateValue()).toBe(1389225600000 + offset);
       };
 
       spyOn($rootScope, 'beforeRender').and.callThrough();
@@ -158,7 +163,7 @@ describe('beforeRender', function () {
       selectedElement.trigger('click');
 
       expect($rootScope.beforeRender).toHaveBeenCalled();
-      expect($rootScope.beforeRender.calls.argsFor(0)[0].dateValue).toEqual(631152000000); // 1990-01-01
+      expect($rootScope.beforeRender.calls.argsFor(0)[0].utcDateValue).toEqual(631152000000); // 1990-01-01
     });
 
 
@@ -178,7 +183,7 @@ describe('beforeRender', function () {
       selectedElement.trigger('click');
 
       expect($rootScope.beforeRender).toHaveBeenCalled();
-      expect($rootScope.beforeRender.calls.argsFor(0)[0].dateValue).toEqual(1420070400000); // 2015-01-01
+      expect($rootScope.beforeRender.calls.argsFor(0)[0].utcDateValue).toEqual(1420070400000); // 2015-01-01
     });
 
 
@@ -199,7 +204,7 @@ describe('beforeRender', function () {
 
       expect($rootScope.beforeRender).toHaveBeenCalled();
 
-      expect($rootScope.beforeRender.calls.argsFor(0)[0].dateValue).toEqual(1388534400000); // 2014-01-01 - the start of the 'month' view.
+      expect($rootScope.beforeRender.calls.argsFor(0)[0].utcDateValue).toEqual(1388534400000); // 2014-01-01 - the start of the 'month' view.
 
 
       var selectedElement = jQuery(jQuery('.day', element)[2]);
@@ -227,7 +232,7 @@ describe('beforeRender', function () {
       $rootScope.$digest();
 
       expect($scope.beforeRender).toHaveBeenCalled();
-      expect($scope.beforeRender.calls.argsFor(0)[0].dateValue).toEqual(1412121600000); // 2014-10-01 12:00 the start of the 'day' view
+      expect($scope.beforeRender.calls.argsFor(0)[0].utcDateValue).toEqual(1412121600000); // 2014-10-01 12:00 the start of the 'day' view
 
       var selectedElement = jQuery(jQuery('.hour', element)[2]);
       selectedElement.trigger('click');
@@ -249,7 +254,7 @@ describe('beforeRender', function () {
       $rootScope.$digest();
 
       expect($rootScope.beforeRender).toHaveBeenCalled();
-      expect($rootScope.beforeRender.calls.argsFor(0)[0].dateValue).toEqual(1413590400000);   // 2014-10-18 00:00 Z
+      expect($rootScope.beforeRender.calls.argsFor(0)[0].utcDateValue).toEqual(1413590400000);   // 2014-10-18 00:00 Z
 
 
       var selectedElement = jQuery(jQuery('.minute', element)[2]);
